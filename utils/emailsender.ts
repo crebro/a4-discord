@@ -35,12 +35,12 @@ class MailSender {
     );
   }
 
-  async sendEmail(toEmail, code, name, event, emailNotify, callback) {
+  async sendEmail(toEmail, code, name, emailNotify, callback) {
     const mailOptions = {
       from: '"Email Verification Bot ✉️" <' + SENDER_EMAIL + ">",
       to: toEmail,
       subject: name + " Discord Email Verification",
-      text: "This is a test mail from Email Verification Bot",
+      text: `Use this code ${code} to have yourself verified on the server`,
     };
 
     if (!IS_GOOGLE) mailOptions["bcc"] = SENDER_EMAIL;
@@ -50,10 +50,9 @@ class MailSender {
         if (emailNotify) {
           console.log(error);
         }
-        await event.editReply("Could not send mail");
+        throw "Could not send mail";
       } else {
         callback(info.accepted[0]);
-        await event.editReply("Mail sent successfully");
         if (emailNotify) {
           console.log("Email sent to: " + toEmail + ", Info: " + info.response);
         }

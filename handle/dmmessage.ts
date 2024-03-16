@@ -3,6 +3,7 @@ import { ChannelType, Client, Message } from "discord.js";
 import { z } from "zod";
 
 const codeschema = z.coerce.number().int().min(1000).max(9999);
+const emailschema = z.string().email();
 
 export default async function handleDmMessage(message: Message, client: Client ) {
     if (message.channel.type !== ChannelType.DM || message.author.id === client.user?.id) {

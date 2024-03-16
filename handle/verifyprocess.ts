@@ -27,5 +27,5 @@ export default async function verifyprocess(query: verifyquery) {
         }
     });
 
-    await mailsender.sendEmail(email, code, "Email Verification", event, true, () => {});
+    await mailsender.sendEmail(email, code, "Email Verification", true, () => {});
 }

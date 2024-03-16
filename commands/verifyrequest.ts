@@ -1,12 +1,6 @@
 import { command } from "@/utils/dfp.js";
 import { options } from "@discord-fp/djs";
-
-import mailsender from "@/utils/emailsender.js";
-import prisma from "@/utils/prisma.js";
-import { z } from "zod";
 import verifyprocess from "@/handle/verifyprocess.js";
-
-const emailschema = z.string().email();
 
 
 export default command.slash({
@@ -21,7 +15,6 @@ export default command.slash({
         if (!event.inGuild()) return;
         await event.reply(".. Working on it");
         
-        // check if email is valid
         try {
             await verifyprocess({
                 email: options.email,
@@ -33,7 +26,12 @@ export default command.slash({
             await event.user.send(`Please check your email \`${options.email}\`. and send the code you recieved. `)
 
         } catch (e) {
-            await event.reply("Invalid Email");
+            if (e.code === "P2002") {
+                await event.editReply("The email you have provided is already in use. Either by you or someone else. Please contact admin.");
+                return;
+            }
+            console.log(e);
+            await event.editReply("Invalid Email");
             return;
         }
 

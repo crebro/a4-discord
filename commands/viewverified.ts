@@ -5,7 +5,7 @@ import { db } from "@/fb/firebase.js";
 import { UserEmail, typeConverter } from "@/fb/collectiontypes.js";
 
 export default protectedCommand.slash({
-  description: "View verified emails on a member",
+  description: "View verified emails on a member | Admin Only",
   options: {
     member: options.user({ description: "The member to view" }),
   },

@@ -60,25 +60,22 @@ export default async function handleDmMessage(
 
     if (guildss.docs.length === 0) {
       throw new Error("Guild was not identified. Please contact admin.");
-      return;
     }
 
     const guild = guildss.docs[0].data();
 
     // adds the verified role to the user
-    (await client.guilds.fetch(useremail.guildid)).members
-      .fetch(message.author.id)
-      .then((member) => {
-        if (guild.verifiedrole) {
-          member.roles.add(guild.verifiedrole);
-        }
-      });
 
-    message.reply(
-      "Verification Successful, You have been given the verified role."
-    );
+    const clientguild = await client.guilds.fetch(useremail.guildid);
+    await clientguild.members.fetch(message.author.id).then((member) => {
+      if (guild.verifiedrole) {
+        member.roles.add(guild.verifiedrole);
 
-    console.log(`code is ${code}`);
+        message.reply(
+          `Verification Successful, You have been given the verified role for the server \`${clientguild.name}\``
+        );
+      }
+    });
   } catch (e) {
     message.reply(`Verification Failed, Please contact admin. + ${e}`);
   }

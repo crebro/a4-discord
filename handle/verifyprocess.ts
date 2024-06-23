@@ -1,7 +1,7 @@
 import { UserEmail, typeConverter } from "@/fb/collectiontypes.js";
 import { db } from "@/fb/firebase.js";
 import mailsender from "@/utils/emailsender.js";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { z } from "zod";
 
 const emailschema = z.string().email();
@@ -17,6 +17,16 @@ export default async function verifyprocess(query: verifyquery) {
   const email = emailschema.parse(query.email);
 
   const code = Math.floor(1000 + Math.random() * 9000);
+
+  // get guild fire firestore
+  const guild = await getDoc(doc(db, "guilds", query.guildid));
+  if (!guild.exists()) {
+    return;
+  }
+
+  if (guild.data().domain && !email.endsWith(guild.data().domain)) {
+    throw new Error("Email domain does not match guild domain");
+  }
 
   await setDoc(
     doc(

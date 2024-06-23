@@ -6,6 +6,8 @@ type Guild = {
   unverifiedrole: string | undefined;
   channelid: string | undefined;
   messageid: string | undefined;
+  domain: string | undefined;
+  mod: string | undefined;
 };
 
 type UserEmail = {

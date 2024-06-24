@@ -7,26 +7,9 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 export default protectedCommand.slash({
   description: "Set Guild Value | Admin only",
   options: {
-    key: options.string({
-      description: "Key",
-      // names: ["domain", 'mod']
-      choices: {
-        domain: {
-          value: "domain",
-          names: {
-            "en-GB": "domain",
-          },
-        },
-        mod: {
-          value: "mod",
-          names: {
-            "en-GB": "Moderator Role | Defaults to 'mod' if not set",
-          },
-        },
-      },
-    }),
-    value: options.string({
-      description: "Value",
+    value: options.role({
+      description: "The verified role",
+      required: true,
     }),
   },
   execute: async ({ event, options }) => {
@@ -42,11 +25,11 @@ export default protectedCommand.slash({
         doc(db, "guilds", event.guildId).withConverter(typeConverter<Guild>()),
         {
           ...guild.data(),
-          [options.key]: options.value,
+          verifiedrole: options.value.id,
         }
       );
     }
 
-    event.editReply(`${options.key} set to ${options.value}`);
+    event.editReply(`verified role set to set to \`${options.value.name}\``);
   },
 });

@@ -2,12 +2,12 @@ import { Firestore, FirestoreDataConverter } from "firebase/firestore";
 
 type Guild = {
   guildid: string;
-  verifiedrole: string | undefined;
-  unverifiedrole: string | undefined;
-  channelid: string | undefined;
-  messageid: string | undefined;
-  domain: string | undefined;
-  mod: string | undefined;
+  verifiedrole?: string;
+  unverifiedrole?: string;
+  channelid?: string;
+  messageid?: string;
+  domain?: string;
+  mod: string;
 };
 
 type UserEmail = {
@@ -16,6 +16,13 @@ type UserEmail = {
   userid: string;
   is_verified: boolean;
   verification_code: number;
+  aka?: string;
+};
+
+type VerifiedInfo = {
+  name: string;
+  email: string;
+  guildid: string;
 };
 
 export function typeConverter<T>(): FirestoreDataConverter<T> {
@@ -27,4 +34,4 @@ export function typeConverter<T>(): FirestoreDataConverter<T> {
   return item;
 }
 
-export type { Guild, UserEmail };
+export type { Guild, UserEmail, VerifiedInfo };

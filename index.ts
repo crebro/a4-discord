@@ -7,6 +7,7 @@ import "./fb/firebase.js";
 import { Events } from "discord.js";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "./fb/firebase.js";
+import { Guild, typeConverter } from "./fb/collectiontypes.js";
 
 //store your token in environment variable or put it here
 const token = process.env["TOKEN"];
@@ -33,8 +34,9 @@ client.on("messageReactionAdd", async (reaction) => {
 
 client.on(Events.GuildCreate, (guild) => {
   console.log(`Joined guild: ${guild.name}`);
-  setDoc(doc(db, "guilds", guild.id), {
+  setDoc(doc(db, "guilds", guild.id).withConverter(typeConverter<Guild>()), {
     guildid: guild.id,
+    mod: "mod",
   });
 });
 

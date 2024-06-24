@@ -5,10 +5,7 @@ import { db } from "@/fb/firebase.js";
 import { UserEmail, typeConverter } from "@/fb/collectiontypes.js";
 
 export default protectedCommand.slash({
-  description: "View verified emails on a member | Admin Only",
-  options: {
-    member: options.user({ description: "The member to view" }),
-  },
+  description: "View verified emails in the entire server | Admin Only",
   execute: async ({ event, options, ctx }) => {
     if (ctx.message === "no-perms") {
       await event.reply("You do not have permission to use this command");
@@ -19,18 +16,11 @@ export default protectedCommand.slash({
 
     const q = query(
       collection(db, "useremails").withConverter(typeConverter<UserEmail>()),
-      where("userid", "==", options.member.value.id),
       where("guildid", "==", event.guildId),
       where("is_verified", "==", true)
     );
 
     const ssDocs = (await getDocs(q)).docs;
-    if (ssDocs.length === 0) {
-      await event.editReply(
-        "The user does not seem be verified with any emails"
-      );
-      return;
-    }
 
     const useremails = ssDocs.map((doc) => doc.data());
 

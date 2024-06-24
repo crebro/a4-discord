@@ -15,18 +15,35 @@ export default protectedCommand.slash({
   },
   execute: async ({ event, options }) => {
     if (!event.inGuild()) return;
-    await event.reply(".. Working on it");
+    await event.reply(
+      `This may take a while, please check back later.\n
+      This message will not update\n
+      You are going to have to test this yourself.`
+    );
 
     const file = await axios.get(options.validuploadfile.url);
 
-    const parser = parse({ from_line: 2 });
+    const parser = parse();
 
     parser.on("readable", function () {
       let record;
+      record = parser.read();
+      if (
+        record.length !== 2 ||
+        record[0] !== "name" ||
+        record[1] !== "email"
+      ) {
+        return;
+      }
+
       while ((record = parser.read())) {
-        addDoc(collection(db, "validemails"), {
+        if (record.length !== 2 || !record[0] || !record[1]) {
+          continue;
+        }
+        addDoc(collection(db, "verified_info"), {
           name: record[0],
           email: record[1],
+          guildid: event.guildId,
         });
       }
     });

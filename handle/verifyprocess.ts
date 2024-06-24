@@ -28,12 +28,22 @@ export default async function verifyprocess(query: verifyquery) {
     throw new Error("Email domain does not match guild domain");
   }
 
+  if (
+    (
+      await getDoc(
+        doc(db, "useremails", `${query.guildid}-${email}`).withConverter(
+          typeConverter<UserEmail>()
+        )
+      )
+    ).exists()
+  ) {
+    throw new Error("Email already exists");
+  }
+
   await setDoc(
-    doc(
-      db,
-      "useremails",
-      `${query.guildid}-${query.userid}-${email}`
-    ).withConverter(typeConverter<UserEmail>()),
+    doc(db, "useremails", `${query.guildid}-${email}`).withConverter(
+      typeConverter<UserEmail>()
+    ),
     {
       email: email,
       guildid: query.guildid,

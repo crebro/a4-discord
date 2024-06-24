@@ -1,4 +1,9 @@
-import { Guild, UserEmail, typeConverter } from "@/fb/collectiontypes.js";
+import {
+  Guild,
+  UserEmail,
+  VerifiedInfo,
+  typeConverter,
+} from "@/fb/collectiontypes.js";
 import { db } from "@/fb/firebase.js";
 import { ChannelType, Client, Message } from "discord.js";
 import {
@@ -12,7 +17,6 @@ import {
 import { z } from "zod";
 
 const codeschema = z.coerce.number().int().min(1000).max(9999);
-const emailschema = z.string().email();
 
 export default async function handleDmMessage(
   message: Message,
@@ -46,10 +50,25 @@ export default async function handleDmMessage(
 
     const useremail = ssDocs[0].data();
 
-    await setDoc(doc(db, "useremails", ssDocs[0].id), {
-      ...useremail,
-      is_verified: true,
-    });
+    const akaquery = query(
+      collection(db, "verified_info").withConverter(
+        typeConverter<VerifiedInfo>()
+      ),
+      where("email", "==", useremail.email)
+    );
+
+    const akaDocs = (await getDocs(akaquery)).docs;
+
+    await setDoc(
+      doc(db, "useremails", ssDocs[0].id).withConverter(
+        typeConverter<UserEmail>()
+      ),
+      {
+        ...useremail,
+        is_verified: true,
+        aka: akaDocs.length > 0 ? akaDocs[0].data().name : undefined,
+      }
+    );
 
     const guildquery = query(
       collection(db, "guilds").withConverter(typeConverter<Guild>()),
@@ -73,6 +92,10 @@ export default async function handleDmMessage(
 
         message.reply(
           `Verification Successful, You have been given the verified role for the server \`${clientguild.name}\``
+        );
+      } else {
+        message.reply(
+          `Verification Successful, You have been verified but the server does not have a verified role set. Please contact admin.`
         );
       }
     });

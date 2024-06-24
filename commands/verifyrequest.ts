@@ -27,7 +27,6 @@ export default command.slash({
         `Please check your email \`${options.email}\`. and send the code you recieved. `
       );
     } catch (e) {
-      console.log(e);
       await event.editReply(`Invalid Email: ${e}`);
       return;
     }

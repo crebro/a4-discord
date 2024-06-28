@@ -8,6 +8,7 @@ import { Events } from "discord.js";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "./fb/firebase.js";
 import { Guild, typeConverter } from "./fb/collectiontypes.js";
+import "./keep_alive.js";
 
 //store your token in environment variable or put it here
 const token = process.env["TOKEN"];

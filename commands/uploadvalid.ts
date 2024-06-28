@@ -13,7 +13,11 @@ export default protectedCommand.slash({
       required: true,
     }),
   },
-  execute: async ({ event, options }) => {
+  execute: async ({ event, options, ctx }) => {
+    if (ctx.message === "no-perms") {
+      await event.reply("You do not have permission to use this command");
+      return;
+    }
     if (!event.inGuild()) return;
     await event.reply(
       `This may take a while, please check back later.\n

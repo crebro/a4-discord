@@ -1,30 +1,50 @@
-# Discord JS Starter
+# A4 Authenticator Bot
 
-Modern Discord bot starter pack with **Typescript** and **Discord.js**
+An Authenticator Discord bot made with **Typescript** and **Discord.js**
 
 ## Features
 
--   Typescript with **esbulid/tsx**
--   Database with **Prisma**
--   Application Commands with [**Discord-FP**](https://github.com/SonMooSans/discord-fp)
+- Allow users to verify themselves with their email
+  - Emails should be of a certain domain (if set by the moderators)
+    - Assign roles after being verified
+- Allow moderators to view veirifed users, and their emails
+- Allow mods to upload a list of confirmed emails and names \*details (csv)
+  - View the verified user's details directly from discord
 
-## Installation
+### Commands
 
-### Clone this repository
-
-`git clone https://github.com/SonMooSans/discord-bot-starter.git`
-
-### Init
-
-We are using **pnpm** by default
-
-`pnpm install`
+| Command Name   | Command Params                 | Authorization Level | Command Description                                                                            |
+| -------------- | ------------------------------ | ------------------- | ---------------------------------------------------------------------------------------------- |
+| /viewverified  | `member`                       | Mod                 | View the Emails verified by the member                                                         |
+| /verifyrequest | None                           | Any                 | Issue a verification request                                                                   |
+| /uploadvalid   | `csv_file`                     | Mod                 | Upload confirmed info assigned to emails `name` and `email` are must and must be in that order |
+| /setguildvalue | `key:enum(domain,mod)` `value` | Mod                 | Set settings for this bot                                                                      |
+| /whois         | `email`                        | Mod                 | Confirmed info from verified info for that email                                               |
 
 ### Configuration
 
-Since it's using `prisma` by default, you can use PostgreSQL, MySQL or any databases supported by prisma
-
+For database, firebase firestore is being used
 Edit your `.env` file for configure bot token & Database url
+
+```env
+
+# Firebase Config
+API_KEY=
+AUTH_DOMAIN=
+PROJECT_ID=
+STORAGE_BUCKET=
+MESSAGING_SENDER_ID=
+APP_ID=
+
+# Email sender config
+SENDER_EMAIL=
+SENDER_PASSWORD=
+SENDER_USERNAME=
+SMTP_HOST=
+SMTP_PORT=
+IS_GOOGLE=
+IS_SECURE=
+```
 
 ### File structure
 
@@ -33,14 +53,19 @@ Edit your `.env` file for configure bot token & Database url
 | index.ts   | Where to start the application |
 | ./commands | All application commands       |
 | .env       | Environment Variables          |
-| ./prisma   | Prisma folder                  |
+
+### Base repository
+
+This base starter project was used for this bot
+
+`git clone https://github.com/SonMooSans/discord-bot-starter.git`
 
 ## Run the Project
 
 ### Watch Mode
 
-`pnpm run dev`
+`npm run dev`
 
 ### Run without watch
 
-`pnpm run start`
+`npm run start`

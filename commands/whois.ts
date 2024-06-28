@@ -38,7 +38,7 @@ export default protectedCommand.slash({
     const name = ssDocs.map((doc) => doc.data().name)[0];
 
     await event.editReply(
-      `Verified info for the email ${options.email} exists\nName: ${name}`
+      `Verified info for the email ${options.email} exists\nName: \`${name}\``
     );
   },
 });

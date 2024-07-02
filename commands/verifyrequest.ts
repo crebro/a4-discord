@@ -20,7 +20,7 @@ export default command.slash({
         userid: event.user.id,
       });
       await event.editReply(
-        `Hello! ${options.email}. Please check your email inbox`
+        `Hello! <@${event.user.id}>. Please check your email inbox`
       );
       await event.user.createDM();
       await event.user.send(

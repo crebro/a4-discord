@@ -27,18 +27,11 @@ export default protectedCommand.slash({
 
     const file = await axios.get(options.validuploadfile.url);
 
-    const parser = parse();
+    const parser = parse({ from_line: 2 });
 
     parser.on("readable", function () {
       let record;
       record = parser.read();
-      if (
-        record.length !== 2 ||
-        record[0] !== "name" ||
-        record[1] !== "email"
-      ) {
-        return;
-      }
 
       while ((record = parser.read())) {
         if (record.length !== 2 || !record[0] || !record[1]) {

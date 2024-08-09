@@ -20,6 +20,7 @@ client.on("ready", () => {
     client,
     load: ["./commands"],
     register: {
+      guildsOnly: true,
       guilds: client.guilds.cache.map((guild) => guild.id),
     },
   });

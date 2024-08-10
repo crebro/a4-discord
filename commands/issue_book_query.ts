@@ -1,6 +1,14 @@
 import { command, verifiedUserCommands } from "@/utils/dfp.js";
 import { options } from "@discord-fp/djs";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDoc,
+  doc,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "@/fb/firebase.js";
 
 export default verifiedUserCommands.slash({
@@ -23,8 +31,18 @@ export default verifiedUserCommands.slash({
     if (!event.inGuild()) return;
     await event.reply(".. Working on it");
 
+    const userdocquery = query(
+      collection(db, "useremails"),
+      where("userid", "==", event.user.id)
+    );
+    const ssDocs = (await getDocs(userdocquery)).docs;
+    if (ssDocs.length === 0) {
+      return;
+    }
+
     await addDoc(collection(db, "bookquery"), {
       query: options.query,
+      useremail: ssDocs[0].data().email,
     });
 
     await event.editReply(

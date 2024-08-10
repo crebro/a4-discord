@@ -42,6 +42,8 @@ export const verifiedUserCommands = dfp.command.middleware(
       return;
     }
     const guildmember = await event.guild?.members.fetch(event.user.id);
+    console.log(guildmember);
+    console.log(guildmember?.roles.cache);
 
     if (!guildmember || !guildmember.roles.cache.has("a4-verified")) {
       return next({

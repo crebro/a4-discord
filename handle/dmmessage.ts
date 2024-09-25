@@ -100,7 +100,9 @@ export default async function handleDmMessage(
       }
     });
   } catch (e) {
-    message.reply(`Verification Failed, Please contact admin. + ${e}`);
+    message.reply(
+      `Verification Failed, Please contact admin. Cause of Error: \n <|| ${e} ||>`
+    );
   }
 
   console.log(

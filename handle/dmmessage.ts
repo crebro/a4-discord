@@ -5,6 +5,7 @@ import {
   typeConverter,
 } from "@/fb/collectiontypes.js";
 import { db } from "@/fb/firebase.js";
+import gradeIdentify from "@/utils/grade_identificaiton.js";
 import { ChannelType, Client, Message } from "discord.js";
 import {
   collection,
@@ -87,6 +88,15 @@ export default async function handleDmMessage(
 
     const clientguild = await client.guilds.fetch(useremail.guildid);
     await clientguild.members.fetch(message.author.id).then((member) => {
+      const membergrade = gradeIdentify(useremail.email);
+
+      // add grade roles
+      if (membergrade === 11 && guild.grade11role) {
+        member.roles.add(guild.grade11role);
+      } else if (membergrade === 12 && guild.grade12role) {
+        member.roles.add(guild.grade12role);
+      }
+
       if (guild.verifiedrole) {
         member.roles.add(guild.verifiedrole);
 
@@ -100,7 +110,9 @@ export default async function handleDmMessage(
       }
     });
   } catch (e) {
-    message.reply(`Verification Failed, Please contact admin. + ${e}`);
+    message.reply(
+      `Verification Failed, Please contact admin. Cause of Error: \n <|| ${e} ||>`
+    );
   }
 
   console.log(

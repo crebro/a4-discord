@@ -60,15 +60,23 @@ export default async function handleDmMessage(
 
     const akaDocs = (await getDocs(akaquery)).docs;
 
+    let docUpdate = {
+      ...useremail,
+      is_verified: true,
+    };
+
+    if (akaDocs.length > 0) {
+      docUpdate = {
+        ...docUpdate,
+        aka: akaDocs[0].data().name,
+      };
+    }
+
     await setDoc(
       doc(db, "useremails", ssDocs[0].id).withConverter(
         typeConverter<UserEmail>()
       ),
-      {
-        ...useremail,
-        is_verified: true,
-        aka: akaDocs.length > 0 ? akaDocs[0].data().name : undefined,
-      }
+      docUpdate
     );
 
     const guildquery = query(

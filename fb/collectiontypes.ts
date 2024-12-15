@@ -7,6 +7,8 @@ type Guild = {
   channelid?: string;
   messageid?: string;
   domain?: string;
+  grade11role?: string;
+  grade12role?: string;
   mod: string;
 };
 
